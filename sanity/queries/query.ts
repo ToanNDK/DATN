@@ -17,5 +17,28 @@ const DEAL_PRODUCTS = defineQuery(
   }`
 );
 
+const PRODUCT_BY_SLUG_QUERY = defineQuery(
+  `*[_type == "product" && slug.current == $slug] | order(name asc) [0]`
+);
 
-export {BRANDS_QUERY, LATEST_BLOG_QUERY,DEAL_PRODUCTS}
+const BRAND_QUERY = defineQuery(`*[_type == "product" && slug.current == $slug]{
+  "brandName": brand->title
+  }`);
+
+const GET_ALL_BLOG = defineQuery(
+  `*[_type == 'blog'] | order(publishedAt desc)[0...$quantity]{
+  ...,  
+     blogcategories[]->{
+    title
+}
+    }
+  `
+);
+export 
+{BRANDS_QUERY,
+LATEST_BLOG_QUERY,
+DEAL_PRODUCTS,
+PRODUCT_BY_SLUG_QUERY,
+BRAND_QUERY,
+GET_ALL_BLOG
+}

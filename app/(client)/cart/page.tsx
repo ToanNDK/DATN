@@ -58,7 +58,7 @@ const CartPage = () => {
       if (defaultAddress) {
         setSelectedAddress(defaultAddress);
       } else if (data.length > 0) {
-        setSelectedAddress(data[0]); // Optional: select first address if no default
+        setSelectedAddress(data[0]); // chon dia chi default
       }
     } catch (error) {
       console.log("Addresses fetching error:", error);

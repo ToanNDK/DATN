@@ -9,29 +9,29 @@ interface ContactItemData {
 
 const data: ContactItemData[] = [
   {
-    title: "Visit Us",
-    subtitle: "New Orlean, USA",
+    title: "Địa chỉ",
+    subtitle: "Quận 1, TP. Hồ Chí Minh",
     icon: (
       <MapPin className="h-6 w-6 text-gray-600 group-hover:text-primary transition-colors" />
     ),
   },
   {
-    title: "Call Us",
-    subtitle: "+12 958 648 597",
+    title: "Hotline",
+    subtitle: "0123 456 789",
     icon: (
       <Phone className="h-6 w-6 text-gray-600 group-hover:text-primary transition-colors" />
     ),
   },
   {
-    title: "Working Hours",
-    subtitle: "Mon - Sat: 10:00 AM - 7:00 PM",
+    title: "Giờ làm việc",
+    subtitle: "Thứ 2 - Thứ 7: 8:00 - 17:30",
     icon: (
       <Clock className="h-6 w-6 text-gray-600 group-hover:text-primary transition-colors" />
     ),
   },
   {
-    title: "Email Us",
-    subtitle: "Shopcart@gmail.com",
+    title: "Email liên hệ",
+    subtitle: "hotro@shopcart.vn",
     icon: (
       <Mail className="h-6 w-6 text-gray-600 group-hover:text-primary transition-colors" />
     ),

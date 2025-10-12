@@ -149,3 +149,42 @@ body{
   font-family : var (--font-poppins);
 }
 
+
+/* custom */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scroll-x {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll-x {
+  display: flex;
+  width: max-content;
+  animation: scroll-x 25s linear infinite;
+}
+
+.animate-scroll {
+  animation: scroll 10s linear infinite;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE và Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+
+

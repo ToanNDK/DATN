@@ -29,11 +29,12 @@ const extraData = [
   },
 ];
 
-const ShopByBrands = async() => {
-    const brands = await getAllBrands()
+const ShopByBrands = async () => {
+  const brands = await getAllBrands();
+
   return (
-    <div className="mb-10 lg:mb-20 bg-shop_light_bg p-5 lg:p-7 rounded-md">
-        <div className="flex items-center gap-5 justify-between mb-10">
+    <div className="mb-10 lg:mb-20 bg-shop_light_bg p-5 lg:p-7 rounded-md overflow-hidden">
+      <div className="flex items-center gap-5 justify-between mb-10">
         <Title>Shop By Brands</Title>
         <Link
           href={"/shop"}
@@ -42,24 +43,31 @@ const ShopByBrands = async() => {
           View all
         </Link>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2.5">
-        {brands?.map((brand)=>(
-            <Link 
-            key={brand?._id}
-            href={{pathname:"/shop",query: {brand:brand?.slug?.current}}}
-            className="bg-white w-34 h-24 flex items-center justify-center rounded-md overflow-hidden hover:shadow-lg shadow-shop_dark_green/20 hoverEffect"
+
+      {/* 👉 Scroll ngang loop liên tục */}
+      <div className="relative w-full overflow-hidden">
+        <div className="flex gap-4 animate-scroll-x">
+          {[...brands, ...brands]?.map((brand, index) => (
+            <Link
+              key={`${brand?._id}-${index}`}
+              href={{ pathname: "/shop", query: { brand: brand?.slug?.current } }}
+              className="bg-white min-w-[130px] h-24 flex items-center justify-center rounded-md overflow-hidden hover:shadow-lg shadow-shop_dark_green/20 hoverEffect"
             >
-                {brand?.image && 
+              {brand?.image && (
                 <Image
-                src={urlFor(brand?.image).url()}
-                alt="brandImage"
-                width={250}
-                height={250}
-                className="w-32 h-20 object-contain"
-              /> }
+                  src={urlFor(brand?.image).url()}
+                  alt="brandImage"
+                  width={250}
+                  height={250}
+                  className="w-32 h-20 object-contain"
+                />
+              )}
             </Link>
-        ))}
+          ))}
+        </div>
       </div>
+
+      {/* Extra section giữ nguyên */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-16 p-2 shadow-sm hover:shadow-shop_light_green/20 py-5">
         {extraData?.map((item, index) => (
           <div
@@ -79,7 +87,7 @@ const ShopByBrands = async() => {
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ShopByBrands
+export default ShopByBrands;

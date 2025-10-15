@@ -12,6 +12,7 @@ import { ClerkLoaded, SignedIn, UserButton } from '@clerk/nextjs'
 import { Logs } from 'lucide-react'
 import Link from 'next/link'
 import { getMyOrders } from '@/sanity/queries'
+import LanguageToggle from './LanguageToggle'
 
 const Header = async () => {
   const user = await currentUser();
@@ -20,19 +21,27 @@ const Header = async () => {
   if (userId){
     orders = await getMyOrders(userId)
   }
-  console.log(user,"user");
   return (
     <header className="bg-white/70 py-5 sticky top-0 z-50 backdrop-blur-md">
-        <Container className="flex items-center justify-between text-lightColor">
-          <div className="w-auto md:w-1/3 flex items-center gap-2.5 justify-start md:gap-0">
-            <MobileMenu/>
-            <Logo />
+      <Container className="flex items-center justify-between text-lightColor">
+        <div className="w-auto md:w-1/3 flex items-center gap-2.5 justify-start md:gap-0">
+          <MobileMenu/>
+          <Logo />
+        </div>
+        <HeaderMenu />
+        <div className="w-auto md:w-1/3 flex items-center justify-end gap-3"> 
+            
+          <div className="hidden md:block flex-1 max-w-sm">
+            <SearchBar /> 
           </div>
-          <HeaderMenu />
-        <div className="w-auto md:w-1/3 flex items-center justify-end gap-5"> 
-          <SearchBar />
-          <CartIcon />
-          <FavoriteButton />
+          
+          
+          <div className="flex items-center gap-3">
+              <LanguageToggle />
+              <CartIcon />
+              <FavoriteButton />   
+          </div>
+
           <ClerkLoaded>
             <SignedIn>
               <Link href={"/orders"} className="group relative hover:text-shop_light_green hoverEffect">
@@ -46,7 +55,8 @@ const Header = async () => {
             {!user && <SignIn/>}
           </ClerkLoaded>
         </div>
-        </Container>
+        
+      </Container>
     </header>
   )
 }

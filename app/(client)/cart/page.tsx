@@ -100,6 +100,57 @@ const CartPage = () => {
     }
   };
    
+  const handleBankTransfer = async () => {
+  try {
+    // Nếu bạn muốn lưu đơn hàng thủ công
+    const metadata: Metadata = {
+      orderNumber: crypto.randomUUID(),
+      customerName: user?.fullName ?? "Unknown",
+      customerEmail: user?.emailAddresses[0]?.emailAddress ?? "Unknown",
+      clerkUserId: user?.id,
+      address: selectedAddress,
+      
+    };
+
+    // Gửi dữ liệu lên server (optional)
+    await fetch("/api/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        items: groupedItems,
+        metadata,
+        status: "pending",
+      }),
+    });
+
+    toast(
+      (t) => (
+        <div className="text-left space-y-2">
+          <p className="font-semibold text-gray-800">
+            Vui lòng chuyển khoản theo thông tin sau:
+          </p>
+          <div className="text-sm text-gray-700">
+            <p><strong>Ngân hàng:</strong> Vietcombank</p>
+            <p><strong>Số tài khoản:</strong> 0123456789</p>
+            <p><strong>Chủ tài khoản:</strong> NGUYEN VAN A</p>
+            <p><strong>Nội dung:</strong> Thanh toán đơn hàng #{metadata.orderNumber}</p>
+          </div>
+          <button
+            onClick={() => toast.dismiss(t.id)}
+            className="mt-2 text-blue-600 font-semibold hover:underline"
+          >
+            Đã hiểu
+          </button>
+        </div>
+      ),
+      { duration: 10000 }
+    );
+  } catch (error) {
+    console.error("Bank transfer error:", error);
+    toast.error("Không thể xử lý thanh toán chuyển khoản.");
+  }
+};
+
   return (
     <div className="bg-gray-50 pb-52 md:pb-10">
       {isSignedIn ? (
@@ -239,6 +290,19 @@ const CartPage = () => {
                            onClick={handleCheckout}
                         >
                           {loading ? "Please wait..." : "Proceed to Checkout"}
+                        </Button>
+
+                        
+                        <Button
+                            className="w-full rounded-full font-semibold tracking-wide mt-3 
+             bg-[#A50064] text-white 
+             hover:bg-[#b6006e] hover:scale-[1.02] 
+             active:scale-[0.98] transition-all duration-200 shadow-md"
+  size="lg"
+  disabled={loading}
+                          onClick={handleBankTransfer}
+                        >
+                          Thanh toán bằng MOMO
                         </Button>
                       </div>
                     </div>

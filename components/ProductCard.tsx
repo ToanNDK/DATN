@@ -29,8 +29,11 @@ const ProductCard = ({ product }: { product: Product }) => {
         )}
         <ProductSideMenu product={product} />
         {product?.status === "sale" ? (
-          <p className="absolute top-2 left-2 z-10 text-xs border border-darkColor/50 px-2 rounded-full group-hover:border-lightGreen hover:text-shop_dark_green hoverEffect">
-            Sale!
+          <p className="absolute top-2 left-2 z-10 text-[11px] font-semibold uppercase
+             bg-white/90 text-shop_dark_green border border-shop_light_green
+             px-2 py-[2px] rounded-full backdrop-blur-sm
+             hover:bg-shop_light_green hover:text-white transition-colors duration-300">
+            Sale
           </p>
         ) : (
           <Link

@@ -46,7 +46,7 @@ export default function Chatbot() {
         onClick={toggleChat}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
-        className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-indigo-600 hover:to-blue-600 text-white rounded-full p-4 shadow-lg shadow-blue-400/30 focus:outline-none transition-all"
+        className="bg-[#3b9c3c] hover:bg-[#2e7d32] text-white rounded-full p-4 shadow-lg shadow-green-400/30 focus:outline-none transition-all"
         aria-label="Mở chat"
       >
         {isOpen ? <X size={22} /> : <MessageCircle size={24} />}

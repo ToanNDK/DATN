@@ -5,13 +5,16 @@ const nextConfig: NextConfig = {
   //   locales: ["en", "vi"],
   //   defaultLocale: "vi",
   // },
+ 
   /* config options here */
   images:{
     remotePatterns:[{
       protocol:"https",
       hostname:"cdn.sanity.io"
       },
+      
     ],
+    
     
   },
 

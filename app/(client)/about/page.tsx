@@ -61,13 +61,13 @@ const AboutPage = () => {
           viewport={{ once: true }}
           className="flex justify-center"
         >
-          <Image
+          {/* <Image
             src="/images/about-store.jpg"
             alt="NDKStore showroom"
             width={500}
             height={400}
             className="rounded-2xl shadow-lg object-cover"
-          />
+          /> */}
         </motion.div>
       </section>
 

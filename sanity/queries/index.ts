@@ -10,7 +10,33 @@ import {
   OTHERS_BLOG_QUERY,
   PRODUCT_BY_SLUG_QUERY,
   SINGLE_BLOG_QUERY,
+  GET_ALL_VOUCHERS,
+  GET_VOUCHER_BY_CODE
 } from "./query";
+
+
+//voucher
+const getAllVouchers = async () => {
+  try {
+    const { data } = await sanityFetch({ query: GET_ALL_VOUCHERS });
+    return data ?? [];
+  } catch (error) {
+    console.log("Error fetching vouchers:", error);
+    return [];
+  }
+};
+const getVoucher = async (code: string) => {
+  try {
+    const { data } = await sanityFetch({
+      query: GET_VOUCHER_BY_CODE,
+      params: { code },
+    });
+    return data ?? null;
+  } catch (error) {
+    console.log("Error fetching voucher:", error);
+    return null;
+  }
+};
 
 const getCategories = async (quantity?: number) => {
   try {
@@ -53,15 +79,15 @@ const getLatestBlogs = async () => {
     return [];
   }
 };
-const getDealProducts = async () => {
-  try {
-    const { data } = await sanityFetch({ query: DEAL_PRODUCTS });
-    return data ?? [];
-  } catch (error) {
-    console.log("Error fetching deal Products:", error);
-    return [];
-  }
-};
+  const getDealProducts = async () => {
+    try {
+      const { data } = await sanityFetch({ query: DEAL_PRODUCTS });
+      return data ?? [];
+    } catch (error) {
+      console.log("Error fetching deal Products:", error);
+      return [];
+    }
+  };
 const getProductBySlug = async (slug: string) => {
   try {
     const product = await sanityFetch({
@@ -163,4 +189,6 @@ export {
   getSingleBlog,
   getBlogCategories,
   getOthersBlog,
+  getAllVouchers,
+  getVoucher,
 };

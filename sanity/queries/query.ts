@@ -81,6 +81,31 @@ const OTHERS_BLOG_QUERY = defineQuery(`*[
     "slug": slug.current,
   }
 }`);
+
+const GET_ALL_VOUCHERS = defineQuery(`
+  *[_type == "voucher"] | order(startDate desc) {
+    ...,
+    products[]->{
+      title,
+      slug,
+      price,
+      mainImage
+    }
+  }
+`);
+
+const GET_VOUCHER_BY_CODE = defineQuery(`
+  *[_type == "voucher" && code == $code][0]{
+    ...,
+    products[]->{
+      title,
+      slug,
+      price,
+      mainImage
+    }
+  }
+`);
+
 export {
   BRANDS_QUERY,
   LATEST_BLOG_QUERY,
@@ -92,4 +117,6 @@ export {
   SINGLE_BLOG_QUERY,
   BLOG_CATEGORIES,
   OTHERS_BLOG_QUERY,
+  GET_ALL_VOUCHERS,
+  GET_VOUCHER_BY_CODE,
 };

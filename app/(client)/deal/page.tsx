@@ -3,7 +3,7 @@ import ProductCard from "@/components/ProductCard";
 import Title from "@/components/Title";
 import { getDealProducts } from "@/sanity/queries";
 import React from "react";
-import Link from "next/link"; // nếu bạn muốn link tới trang khác
+import Link from "next/link"; 
 
 const DealPage = async () => {
   const products = await getDealProducts();

@@ -877,6 +877,12 @@ export type OTHERS_BLOG_QUERYResult = Array<{
   } | null;
   categories: null;
 }>;
+// Variable: GET_ALL_VOUCHERS
+// Query: *[_type == "voucher"] | order(startDate desc) {    ...,    products[]->{      title,      slug,      price,      mainImage    }  }
+export type GET_ALL_VOUCHERSResult = Array<never>;
+// Variable: GET_VOUCHER_BY_CODE
+// Query: *[_type == "voucher" && code == $code][0]{    ...,    products[]->{      title,      slug,      price,      mainImage    }  }
+export type GET_VOUCHER_BY_CODEResult = null;
 
 // Query TypeMap
 import "@sanity/client";
@@ -892,5 +898,7 @@ declare module "@sanity/client" {
     "*[_type == \"blog\" && slug.current == $slug][0]{\n  ..., \n    author->{\n    name,\n    image,\n  },\n  blogcategories[]->{\n    title,\n    \"slug\": slug.current,\n  },\n}": SINGLE_BLOG_QUERYResult;
     "*[_type == \"blog\"]{\n     blogcategories[]->{\n    ...\n    }\n  }": BLOG_CATEGORIESResult;
     "*[\n  _type == \"blog\"\n  && defined(slug.current)\n  && slug.current != $slug\n]|order(publishedAt desc)[0...$quantity]{\n...\n  publishedAt,\n  title,\n  mainImage,\n  slug,\n  author->{\n    name,\n    image,\n  },\n  categories[]->{\n    title,\n    \"slug\": slug.current,\n  }\n}": OTHERS_BLOG_QUERYResult;
+    "\n  *[_type == \"voucher\"] | order(startDate desc) {\n    ...,\n    products[]->{\n      title,\n      slug,\n      price,\n      mainImage\n    }\n  }\n": GET_ALL_VOUCHERSResult;
+    "\n  *[_type == \"voucher\" && code == $code][0]{\n    ...,\n    products[]->{\n      title,\n      slug,\n      price,\n      mainImage\n    }\n  }\n": GET_VOUCHER_BY_CODEResult;
   }
 }

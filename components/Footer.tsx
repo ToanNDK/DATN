@@ -41,7 +41,7 @@ const Footer = () => {
           {/* Cột 2: Liên kết nhanh */}
           <div>
             <SubTitle className="text-lg font-semibold mb-4 text-darkColor">
-              Liên kết nhanh
+              Quick Links
             </SubTitle>
             <ul className="space-y-3">
               {quickLinksData.map((item) => (
@@ -60,7 +60,7 @@ const Footer = () => {
           {/* Cột 3: Danh mục sản phẩm */}
           <div>
             <SubTitle className="text-lg font-semibold mb-4 text-darkColor">
-              Danh mục
+              Category
             </SubTitle>
             <ul className="space-y-3">
               {categoriesData.map((item) => (
@@ -85,7 +85,7 @@ const Footer = () => {
               Đăng ký nhận bản tin để cập nhật sớm nhất về sản phẩm mới, ưu đãi
               và tin tức từ{" "}
               <span className="font-semibold text-shop_light_green">
-                Shopcartyt
+                NDKStore
               </span>.
             </SubText>
             
@@ -102,7 +102,7 @@ const Footer = () => {
             <span className="font-semibold text-darkColor">
               NDKStore
             </span>
-            . Mọi quyền được bảo lưu.
+            . All rights reserved.
           </div>
 
           <div className="mt-3 sm:mt-0 space-x-4">

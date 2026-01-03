@@ -9,8 +9,8 @@ interface ContactItemData {
 
 const data: ContactItemData[] = [
   {
-    title: "Địa chỉ",
-    subtitle: "Quận 1, TP. Hồ Chí Minh",
+    title: "Address",
+    subtitle: "Hoàn Kiếm, Hà Nội",
     icon: (
       <MapPin className="h-6 w-6 text-gray-600 group-hover:text-primary transition-colors" />
     ),
@@ -23,15 +23,15 @@ const data: ContactItemData[] = [
     ),
   },
   {
-    title: "Giờ làm việc",
+    title: "Working Hours",
     subtitle: "Thứ 2 - Thứ 7: 8:00 - 17:30",
     icon: (
       <Clock className="h-6 w-6 text-gray-600 group-hover:text-primary transition-colors" />
     ),
   },
   {
-    title: "Email liên hệ",
-    subtitle: "hotro@shopcart.vn",
+    title: "Email",
+    subtitle: "hotro@ndkstore.vn",
     icon: (
       <Mail className="h-6 w-6 text-gray-600 group-hover:text-primary transition-colors" />
     ),

@@ -2,14 +2,17 @@ import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
 export async function POST(req: Request) {
-  const body = await req.json();
-  const { name, email, message } = body;
-
-  if (!name || !email || !message) {
-    return NextResponse.json({ message: "Please fill all fields" }, { status: 400 });
-  }
-
   try {
+    const { name, email, message } = await req.json();
+
+    if (!name || !email || !message) {
+      return NextResponse.json(
+        { message: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+
+    // Cấu hình transporter (Gmail)
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -18,19 +21,29 @@ export async function POST(req: Request) {
       },
     });
 
+    // Nội dung email
     await transporter.sendMail({
-      from: email,
-      to: process.env.EMAIL_USER,
-      subject: `Contact Form Message from ${name}`,
-      text: message,
-      html: `<p><strong>Name:</strong> ${name}</p>
-             <p><strong>Email:</strong> ${email}</p>
-             <p><strong>Message:</strong> ${message}</p>`,
+      from: `"NDKStore Contact" <${process.env.EMAIL_USER}>`,
+      to: process.env.EMAIL_RECEIVER, // email nhận
+      subject: "📩 Liên hệ mới từ website NDKStore",
+      html: `
+        <h3>Thông tin liên hệ mới</h3>
+        <p><strong>Họ tên:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Nội dung:</strong></p>
+        <p>${message}</p>
+      `,
     });
 
-    return NextResponse.json({ message: "Message sent successfully!" });
-  } catch (err) {
-    console.error(err);
-    return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { message: "Email sent successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Send mail error:", error);
+    return NextResponse.json(
+      { message: "Failed to send email" },
+      { status: 500 }
+    );
   }
 }

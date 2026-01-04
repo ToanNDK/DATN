@@ -55,7 +55,7 @@ export default function ContactPage() {
           Get in Touch
         </h1>
         <p className="text-center text-gray-500 dark:text-gray-400 mb-8">
-          Have a question or just want to say hello? Fill out the form below and we'll get back to you soon.
+          Have a question or just want to say hello? Fill out the form below and we&apos;ll get back to you soon.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-5">

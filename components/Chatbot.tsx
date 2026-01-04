@@ -27,7 +27,7 @@ export default function Chatbot() {
       const data = await res.json();
       const reply = data.answer || "Xin lỗi, mình chưa hiểu câu hỏi của bạn.";
       setMessages((prev) => [...prev, { role: "bot", text: reply }]);
-    } catch (err) {
+    } catch {
       setMessages((prev) => [
         ...prev,
         { role: "bot", text: "Lỗi kết nối, vui lòng thử lại sau." },

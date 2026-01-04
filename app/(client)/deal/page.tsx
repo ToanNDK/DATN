@@ -11,13 +11,13 @@ const DealPage = async () => {
     <div className="py-10 bg-deal-bg">
       <Container>
         <Title className="mb-5 underline underline-offset-4 decoration-[1px] text-base uppercase tracking-wide">
-          Ưu đãi hot trong tuần
+          Hot Deal
         </Title>
 
         {/* Danh sách sản phẩm */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5 mb-8">
           {products?.map((product) => (
-            //@ts-ignore
+            //@ts-expect-error product type
             <ProductCard key={product?._id} product={product} />
           ))}
         </div>

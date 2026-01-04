@@ -4,7 +4,7 @@ import { Heart } from 'lucide-react';
 import React from 'react'
 
 const AddToWishlistButton = ({
-    product,
+    
     className,
 
 }:{

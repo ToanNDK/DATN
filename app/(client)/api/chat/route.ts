@@ -121,7 +121,7 @@ async function searchSanityProducts(query: string): Promise<Product[]> {
     if (match) {
         let operator = '';
         let priceUSD = 0;
-        let priceKey = 'priceFilter';
+        const priceKey = 'priceFilter';
         
         // Match[2] là giá trị số của nhóm 1 (dưới/trên), Match[4] là giá trị số của nhóm 2 (chỉ số)
         if (match[2]) { // Bắt các trường hợp có từ khóa (dưới/trên/...)
@@ -192,12 +192,20 @@ async function searchSanityProducts(query: string): Promise<Product[]> {
 
     try {
         // ... (Logic fetch giữ nguyên) ...
-        const products = await client.fetch(GROQ_QUERY, queryParams);
-        
-        return products.map((p: any) => ({
-            ...p,
-            price: Number(p.price) || 0,
-        })) as Product[];
+        const productsRaw = await client.fetch(GROQ_QUERY, queryParams) as unknown;
+        if (!Array.isArray(productsRaw)) return [];
+
+        return productsRaw.map((p) => {
+            const obj = p as Record<string, unknown>;
+            const name = typeof obj.name === 'string' ? obj.name : String(obj.name ?? '');
+            const slug = typeof obj.slug === 'string' ? obj.slug : String(obj.slug ?? '');
+            const price = typeof obj.price === 'number' ? obj.price : typeof obj.price === 'string' ? Number(obj.price) : 0;
+            return {
+                name,
+                slug,
+                price: Number(price) || 0,
+            } as Product;
+        });
     } catch (error) {
         console.error("Lỗi khi fetch dữ liệu Sanity:", error);
         return []; 

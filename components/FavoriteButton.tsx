@@ -5,7 +5,7 @@ import React from 'react'
 
 const FavoriteButton = ({
   showProduct = false,
-  product,
+  product: _product,
 }: {
   showProduct?: boolean;
   product?: Product | null | undefined;

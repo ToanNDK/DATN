@@ -47,9 +47,7 @@ const CartPage = () => {
   const { user } = useUser();
   const [addresses, setAddresses] = useState<Address[] | null>(null);
   const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
-  //voucher
-  const [voucherCode, setVoucherCode] = useState("");
-  const [voucherData, setVoucherData] = useState(null);
+
   const fetchAddresses = async () => {
     setLoading(true);
     try {

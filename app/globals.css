@@ -4,22 +4,30 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme{
-  --font-poppins: "Poppins", "sans-serif";
-  --color-shop_light_pink: #fcf0e4;
-  --color-shop_dark_green: #063c28;
-  --color-shop_btn_dark_green: #063d29;
-  --color-shop_light_bg: #f6f6f6;
-  --color-shop_light_green: #3b9c3c;
-  --color-shop_orange: #fb6c08;
-  --color-darkColor: #151515;
-  --color-lightColor: #52525b;
-  --color-lightOrange: #fca99b;
-  --color-shop_light_green: #3b9c3c;
-  --color-deal-bg: #f1f3f8;
-  --color-dark_blue: #6c7fd8;
-  --color-shop_lighter_bg: #f1f3f8;
-  --color-shop_light_text:#686e7d;
-  --color-deal-bg: #f1f3f8;
+  --font-poppins: "Inter", sans-serif;
+ /* Backgrounds */
+--color-shop_light_pink: #eef3fb;          /* light blue background */
+--color-shop_light_bg: #f5f7fb;             /* main background */
+--color-shop_lighter_bg: #edf2fa;           /* section background */
+--color-deal-bg: #edf2fa;
+
+/* Primary Blue */
+--color-shop_dark_green: #1e3a8a;           /* primary dark blue */
+--color-shop_btn_dark_green: #1e40af;       /* button primary */
+--color-dark_blue: #3b82f6;                 /* accent blue */
+
+/* Secondary / Accent */
+--color-shop_light_green: #60a5fa;          /* soft blue accent */
+--color-shop_orange: #f97316;               /* CTA / highlight */
+--color-lightOrange: #fdba74;               /* soft orange hover */
+
+/* Text */
+--color-darkColor: #0f172a;                 /* main text */
+--color-lightColor: #475569;                /* secondary text */
+--color-shop_light_text: #64748b;           /* muted text */
+
+/* Misc */
+--color-deal-bg: #edf2fa;
 }
 
 @theme inline {
@@ -61,7 +69,6 @@
 }
 
 :root {
-  --font-poppins:"Poppins",sans-serif;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -146,7 +153,7 @@
 }
 
 body{
-  font-family : var (--font-poppins);
+  font-family : var(--font-poppins);
 }
 
 

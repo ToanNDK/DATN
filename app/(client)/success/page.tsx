@@ -18,7 +18,7 @@ const SuccessPageContent = () => {
     }
   }, [orderNumber, resetCart]);
   return (
-    <div className="py-5 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center mx-4">
+    <div className="py-5 bg-linear-to-br from-gray-50 to-gray-100 flex items-center justify-center mx-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -35,13 +35,11 @@ const SuccessPageContent = () => {
         </motion.div>
 
         <h1 className="text-3xl font-bold text-gray-900 mb-4">
-          Order Confirmed!
+          Thanh toán thành công !
         </h1>
         <div className="space-y-4 mb-4 text-left">
           <p className="text-gray-700">
-            Thank you for your purchase. We&apos;re processing your order and
-            will ship it soon. A confirmation email with your order details will
-            be sent to your inbox shortly.
+            Cảm ơn bạn đã tin tưởng chúng tôi. Chúng tôi đang xử lý đơn hàng của bạn và sẽ giao hàng sớm. Một email xác nhận với chi tiết đơn hàng sẽ được gửi đến hộp thư của bạn trong thời gian ngắn.
           </p>
           <p className="text-gray-700">
             Order Number:{" "}
@@ -54,14 +52,14 @@ const SuccessPageContent = () => {
             className="flex items-center justify-center px-4 py-3 font-semibold bg-black text-white rounded-lg hover:bg-gray-800 transition-all duration-300 shadow-md"
           >
             <Home className="w-5 h-5 mr-2" />
-            Home
+            Trang chủ
           </Link>
           <Link
             href="/orders"
             className="flex items-center justify-center px-4 py-3 font-semibold bg-lightGreen text-black border border-lightGreen rounded-lg hover:bg-gray-100 transition-all duration-300 shadow-md"
           >
             <Package className="w-5 h-5 mr-2" />
-            Orders
+            Đơn hàng 
           </Link>
           <Link
             href="/"

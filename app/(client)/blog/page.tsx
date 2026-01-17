@@ -51,7 +51,7 @@ const BlogPage = async () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-shop_light_bg to-white">
+    <div className="min-h-screen bg-linear-to-b from-shop_light_bg to-white">
       {/* Breadcrumb */}
       <Container className="pt-6">
         <DynamicBreadcrumb />
@@ -59,7 +59,7 @@ const BlogPage = async () => {
 
       {/* Hero Section */}
       <Container className="py-8 sm:py-12">
-        <Card className="bg-gradient-to-r from-shop_dark_green to-shop_light_green text-white border-0 shadow-xl overflow-hidden">
+        <Card className="bg-linear-to-r from-shop_dark_green to-shop_light_green text-white border-0 shadow-xl overflow-hidden">
           <CardContent className="p-6 sm:p-8 lg:p-12 text-center">
             <div className="max-w-3xl mx-auto">
               <div className="flex items-center justify-center gap-2 mb-4">
@@ -72,12 +72,10 @@ const BlogPage = async () => {
                 </Badge>
               </div>
               <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-                Stories, Tips & Insights
+                Câu chuyện & Góc nhìn chuyên sâu
               </h1>
               <p className="text-sm sm:text-base md:text-lg text-white/90 mb-6 max-w-2xl mx-auto">
-                Discover the latest trends, expert advice, and behind-the-scenes
-                stories from our team. Stay informed with our curated collection
-                of articles.
+                Khám phá những xu hướng mới nhất, lời khuyên từ chuyên gia và các câu chuyện hậu trường từ đội ngũ của chúng tôi. Luôn cập nhật thông tin với bộ sưu tập bài viết được chọn lọc kỹ lưỡng.
               </p>
 
               {/* Blog Stats */}
@@ -85,7 +83,7 @@ const BlogPage = async () => {
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 sm:p-4">
                   <div className="flex items-center gap-2 text-white/80 mb-1">
                     <BookOpen className="w-4 h-4" />
-                    <span className="text-xs sm:text-sm">Articles</span>
+                    <span className="text-xs sm:text-sm">Bài viết</span>
                   </div>
                   <p className="text-xl sm:text-2xl font-bold">
                     {blogs?.length || 0}
@@ -95,7 +93,7 @@ const BlogPage = async () => {
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 sm:p-4">
                   <div className="flex items-center gap-2 text-white/80 mb-1">
                     <Eye className="w-4 h-4" />
-                    <span className="text-xs sm:text-sm">Readers</span>
+                    <span className="text-xs sm:text-sm">Độc giả</span>
                   </div>
                   <p className="text-xl sm:text-2xl font-bold">15K+</p>
                 </div>
@@ -103,7 +101,7 @@ const BlogPage = async () => {
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 sm:p-4 col-span-2 sm:col-span-1">
                   <div className="flex items-center gap-2 text-white/80 mb-1">
                     <User className="w-4 h-4" />
-                    <span className="text-xs sm:text-sm">Authors</span>
+                    <span className="text-xs sm:text-sm">Tác giả</span>
                   </div>
                   <p className="text-xl sm:text-2xl font-bold">5+</p>
                 </div>
@@ -119,10 +117,10 @@ const BlogPage = async () => {
           <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="text-2xl sm:text-3xl font-bold text-shop_dark_green mb-2">
-                Latest Articles
+                Tin mới nhất
               </h2>
               <p className="text-gray-600">
-                Stay updated with our latest posts and insights
+                Những bài viết nóng hổi mới nhất từ cửa hàng và cộng đồng của chúng tôi.
               </p>
             </div>
           </div>
@@ -148,7 +146,7 @@ const BlogPage = async () => {
                         index === 0 ? "h-64 md:h-80" : "h-48 md:h-56"
                       }`}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent" />
                     <Link
                       href={`/blog/${blog?.slug?.current}`}
                       className="absolute inset-0"
@@ -172,7 +170,7 @@ const BlogPage = async () => {
                     </div>
                     <div className="flex items-center gap-1">
                       <Clock size={14} />
-                      {calculateReadingTime(blog?.title || "")} min read
+                      {calculateReadingTime(blog?.title || "")} phút đọc
                     </div>
                   </div>
 
@@ -204,7 +202,7 @@ const BlogPage = async () => {
                     href={`/blog/${blog?.slug?.current}`}
                     className="inline-flex items-center gap-2 text-sm font-medium text-shop_light_green hover:text-shop_dark_green transition-colors duration-200 group/link"
                   >
-                    Read More
+                    Đọc thêm
                     <ArrowRight
                       size={14}
                       className="transition-transform duration-200 group-hover/link:translate-x-1"
@@ -222,10 +220,10 @@ const BlogPage = async () => {
               </div>
               <div>
                 <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
-                  No Blog Posts Yet
+                  Không có bài viết nào
                 </h3>
                 <p className="text-sm sm:text-base text-gray-600 mb-4">
-                  We&apos;re working on some amazing content. Check back soon!
+                  Chúng tôi đang làm việc trên một số nội dung tuyệt vời. Quay lại sau!
                 </p>
                 <Button asChild>
                   <Link href="/">Back to Home</Link>
@@ -238,7 +236,7 @@ const BlogPage = async () => {
 
       {/* Newsletter Section */}
       <Container className="py-8 sm:py-12">
-        <Card className="bg-gradient-to-r from-shop_light_pink to-light-orange/20 border-0">
+        <Card className="bg-linear-to-r from-shop_light_pink to-light-orange/20 border-0">
           <CardContent className="p-6 sm:p-8 lg:p-12 text-center">
             <div className="max-w-2xl mx-auto">
               <BookOpen className="w-12 h-12 text-shop_dark_green mx-auto mb-4" />
@@ -254,6 +252,7 @@ const BlogPage = async () => {
                 <Button
                   size="lg"
                   className="bg-shop_dark_green hover:bg-shop_light_green w-full sm:w-auto"
+                  
                 >
                   Subscribe Newsletter
                 </Button>

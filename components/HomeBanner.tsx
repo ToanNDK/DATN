@@ -10,7 +10,7 @@ const slides = [
   {
     title: (
       <>
-        Grab Upto 50% off on <br /> Selected Headphones
+        Giảm Giá Lên Đến 50% <br /> Cho Tai Nghe Được Chọn
       </>
     ),
     image: banner_1,
@@ -18,7 +18,7 @@ const slides = [
   {
     title: (
       <>
-        Discover The New <br /> Smart Speakers
+        Khám Phá Dòng <br /> Loa Thông Minh Mới
       </>
     ),
     image: banner_2,
@@ -26,7 +26,7 @@ const slides = [
   {
     title: (
       <>
-        New Arrivals <br /> Wireless Earbuds
+        Sản Phẩm Mới Về <br /> Tai Nghe Không Dây
       </>
     ),
     image: banner_1,
@@ -45,7 +45,7 @@ const HomeBanner = () => {
   }, []);
 
   return (
-    <div className="relative w-full h-[500px] md:h-[600px] rounded-lg overflow-hidden">
+    <div className="relative w-full h-125 md:h-150 rounded-lg overflow-hidden">
       {/* Ảnh nền full */}
       {slides.map((item, index) => (
         <Image
@@ -71,7 +71,7 @@ const HomeBanner = () => {
             href="/shop"
             className="bg-shop_dark_green text-white px-5 py-3 rounded-md text-sm font-semibold hover:bg-shop_btn_dark_green transition-all inline-block"
           >
-            Buy Now
+            Mua ngay
           </Link>
         </div>
       </div>

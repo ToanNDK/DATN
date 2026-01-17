@@ -32,6 +32,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const CartPage = () => {
   const {
@@ -41,6 +42,7 @@ const CartPage = () => {
     getSubTotalPrice,
     resetCart,
   } = useStore();
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const groupedItems = useStore((state) => state.getGroupedItems());
   const { isSignedIn } = useAuth();
@@ -78,7 +80,7 @@ const CartPage = () => {
       toast.success("Cart reset successfully!");
     }
   };
-
+  //checkout
   const handleCheckout = async () => {
     setLoading(true);
     try {
@@ -100,64 +102,94 @@ const CartPage = () => {
     }
   };
 
-  const handleBankTransfer = async () => {
-    try {
-      // Nếu bạn muốn lưu đơn hàng thủ công
-      const metadata: Metadata = {
-        orderNumber: crypto.randomUUID(),
-        customerName: user?.fullName ?? "Unknown",
-        customerEmail: user?.emailAddresses[0]?.emailAddress ?? "Unknown",
-        clerkUserId: user?.id,
-        address: selectedAddress,
-      };
+  const handlePlaceOrder = async () => {
+    if (!user || !selectedAddress) {
+      toast.error("Vui lòng đăng nhập và chọn địa chỉ giao hàng");
+      return;
+    }
 
-      // Gửi dữ liệu lên server (optional)
-      await fetch("/api/orders", {
+    setLoading(true);
+
+    try {
+      const orderNumber = crypto.randomUUID();
+
+      const res = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          items: groupedItems,
-          metadata,
-          status: "pending",
+          orderNumber,
+          clerkUserId: user.id,
+          customerName: user.fullName,
+          email: user.emailAddresses[0]?.emailAddress,
+          address: selectedAddress,
+          products: groupedItems.map(({ product }) => ({
+            product: product._id,
+            quantity: getItemCount(product._id),
+          })),
+          totalPrice: getTotalPrice(),
+          currency: "USD",
         }),
       });
 
-      toast(
-        (t) => (
-          <div className="text-left space-y-2">
-            <p className="font-semibold text-gray-800">
-              Vui lòng chuyển khoản theo thông tin sau:
-            </p>
-            <div className="text-sm text-gray-700">
-              <p>
-                <strong>Ngân hàng:</strong> Vietcombank
-              </p>
-              <p>
-                <strong>Số tài khoản:</strong> 0123456789
-              </p>
-              <p>
-                <strong>Chủ tài khoản:</strong> NGUYEN VAN A
-              </p>
-              <p>
-                <strong>Nội dung:</strong> Thanh toán đơn hàng #
-                {metadata.orderNumber}
-              </p>
-            </div>
-            <button
-              onClick={() => toast.dismiss(t.id)}
-              className="mt-2 text-blue-600 font-semibold hover:underline"
-            >
-              Đã hiểu
-            </button>
-          </div>
-        ),
-        { duration: 10000 }
-      );
+      if (!res.ok) throw new Error("Create order failed");
+
+      resetCart();
+      window.location.href = `/success?order=${orderNumber}`;
     } catch (error) {
-      console.error("Bank transfer error:", error);
-      toast.error("Không thể xử lý thanh toán chuyển khoản.");
+      console.error(error);
+      toast.error("Đặt hàng thất bại");
+    } finally {
+      setLoading(false);
     }
   };
+
+  //Btn Đặt hàng
+  const handleWithoutPay = async () => {
+  if (!user || !selectedAddress || !groupedItems.length) {
+    toast.error("Vui lòng đăng nhập và chọn địa chỉ giao hàng");
+    return;
+  }
+
+  try {
+    setLoading(true);
+
+    const res = await fetch("/api/orders/place", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        cartItems: groupedItems.map(({ product }) => ({
+          productId: product._id,
+          quantity: getItemCount(product._id),
+        })),
+        metadata: {
+          customerName: user.fullName ?? "",
+          customerEmail: user.emailAddresses[0]?.emailAddress ?? "",
+          clerkUserId: user.id ?? "",
+        },
+        totalPrice: getTotalPrice(), // ❗ FIX: truyền giá trị, không truyền function
+        currency: "usd",
+        address: selectedAddress,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data?.error || "Failed to place order");
+    }
+
+    resetCart();
+
+    // 👉 Chuyển thẳng sang success
+    router.replace(`/success?order=${data.orderNumber}`);
+  } catch (error) {
+    console.error("handleWithoutPay error:", error);
+    toast.error("Không thể đặt hàng. Vui lòng thử lại.");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="bg-gray-50 pb-52 md:pb-10">
@@ -214,7 +246,7 @@ const CartPage = () => {
                                   </span>
                                 </p>
                               </div>
-                              
+
                               <div className="flex items-center gap-2">
                                 <TooltipProvider>
                                   <Tooltip>
@@ -300,17 +332,13 @@ const CartPage = () => {
                         >
                           {loading ? "Please wait..." : "Proceed to Checkout"}
                         </Button>
-
                         <Button
-                          className="w-full rounded-full font-semibold tracking-wide mt-3 
-             bg-[#A50064] text-white 
-             hover:bg-[#b6006e] hover:scale-[1.02] 
-             active:scale-[0.98] transition-all duration-200 shadow-md"
+                          className="w-full rounded-full font-semibold tracking-wide hoverEffect mt-3"
                           size="lg"
-                          disabled={loading}
-                          onClick={handleBankTransfer}
+                          disabled={loading || !selectedAddress}
+                          onClick={handleWithoutPay}
                         >
-                          Thanh toán bằng MOMO
+                          Đặt hàng
                         </Button>
                       </div>
                     </div>

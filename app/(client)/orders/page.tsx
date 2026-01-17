@@ -32,7 +32,7 @@ const OrdersPage = async() => {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="w-[100px] md:w-auto">
+                      <TableHead className="w-25 md:w-auto">
                         Order Number
                       </TableHead>
                       <TableHead className="hidden md:table-cell">
@@ -54,6 +54,7 @@ const OrdersPage = async() => {
                 </Table>
                 <ScrollBar orientation="horizontal" />
               </ScrollArea>
+              
             </CardContent>
           </Card>
         ) : (

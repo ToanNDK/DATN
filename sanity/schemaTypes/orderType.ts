@@ -158,7 +158,7 @@ export const orderType = defineType({
       email: "email",
     },
     prepare(select) {
-      const orderIdSnippet = `${select.orderId.slice(0, 5)}...${select.orderId.slice(-5)}`;
+      const orderIdSnippet = select.orderId ? `${select.orderId.slice(0, 5)}...${select.orderId.slice(-5)}` : "N/A";
       return {
         title: `${select.name} (${orderIdSnippet})`,
         subtitle: `${select.amount} ${select.currency}, ${select.email}`,

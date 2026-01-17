@@ -10,7 +10,7 @@ const DealPage = async () => {
   return (
     <div className="py-10 bg-deal-bg">
       <Container>
-        <Title className="mb-5 underline underline-offset-4 decoration-[1px] text-base uppercase tracking-wide">
+        <Title className="mb-5 underline underline-offset-4 decoration-1 text-base uppercase tracking-wide">
           Hot Deal
         </Title>
 

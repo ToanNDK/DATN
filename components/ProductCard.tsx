@@ -12,7 +12,7 @@ import AddToCartButton from "./AddToCartButton";
 
 const ProductCard = ({ product }: { product: Product }) => {
   return (
-    <div className="text-sm border-[1px] rounded-md border-darkBlue/20 group bg-white">
+    <div className="text-sm border rounded-md border-darkBlue/20 group bg-white">
       <div className="relative group overflow-hidden bg-shop_light_bg">
         {product?.images && (
           <Link href={`/product/${product?.slug?.current}`}>
@@ -31,7 +31,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         {product?.status === "sale" ? (
           <p className="absolute top-2 left-2 z-10 text-[11px] font-semibold uppercase
              bg-white/90 text-shop_dark_green border border-shop_light_green
-             px-2 py-[2px] rounded-full backdrop-blur-sm
+             px-2 py-0.5 rounded-full backdrop-blur-sm
              hover:bg-shop_light_green hover:text-white transition-colors duration-300">
             Sale
           </p>

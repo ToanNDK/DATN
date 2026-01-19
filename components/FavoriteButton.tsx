@@ -5,11 +5,11 @@ import React from 'react'
 
 const FavoriteButton = ({
   showProduct = false,
-  product: _product,
 }: {
   showProduct?: boolean;
   product?: Product | null | undefined;
 }) => {
+
   return (
     <>
       {!showProduct ? <Link href={"/wishlist"} className="group relative">

@@ -102,46 +102,46 @@ const CartPage = () => {
     }
   };
 
-  const handlePlaceOrder = async () => {
-    if (!user || !selectedAddress) {
-      toast.error("Vui lòng đăng nhập và chọn địa chỉ giao hàng");
-      return;
-    }
+  // const handlePlaceOrder = async () => {
+  //   if (!user || !selectedAddress) {
+  //     toast.error("Vui lòng đăng nhập và chọn địa chỉ giao hàng");
+  //     return;
+  //   }
 
-    setLoading(true);
+  //   setLoading(true);
 
-    try {
-      const orderNumber = crypto.randomUUID();
+  //   try {
+  //     const orderNumber = crypto.randomUUID();
 
-      const res = await fetch("/api/orders", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          orderNumber,
-          clerkUserId: user.id,
-          customerName: user.fullName,
-          email: user.emailAddresses[0]?.emailAddress,
-          address: selectedAddress,
-          products: groupedItems.map(({ product }) => ({
-            product: product._id,
-            quantity: getItemCount(product._id),
-          })),
-          totalPrice: getTotalPrice(),
-          currency: "USD",
-        }),
-      });
+  //     const res = await fetch("/api/orders", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         orderNumber,
+  //         clerkUserId: user.id,
+  //         customerName: user.fullName,
+  //         email: user.emailAddresses[0]?.emailAddress,
+  //         address: selectedAddress,
+  //         products: groupedItems.map(({ product }) => ({
+  //           product: product._id,
+  //           quantity: getItemCount(product._id),
+  //         })),
+  //         totalPrice: getTotalPrice(),
+  //         currency: "USD",
+  //       }),
+  //     });
 
-      if (!res.ok) throw new Error("Create order failed");
+  //     if (!res.ok) throw new Error("Create order failed");
 
-      resetCart();
-      window.location.href = `/success?order=${orderNumber}`;
-    } catch (error) {
-      console.error(error);
-      toast.error("Đặt hàng thất bại");
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     resetCart();
+  //     window.location.href = `/success?order=${orderNumber}`;
+  //   } catch (error) {
+  //     console.error(error);
+  //     toast.error("Đặt hàng thất bại");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   //Btn Đặt hàng
   const handleWithoutPay = async () => {

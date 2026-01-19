@@ -27,16 +27,18 @@ export async function POST(req: Request) {
     if (products.length > 0) {
       // ✅ Xây dựng câu trả lời từ dữ liệu sản phẩm
       const productList = products
-        .map(
-          (p) =>
-            `- **${p.name}** (Giá: ${p.price.toLocaleString("vi-VN")}$) –(/product/${p.slug})`
-        )
-        .join("\n");
+  .map(
+    (p) =>
+      `- **${p.name}**  
+Giá: ${p.price.toLocaleString("vi-VN")}$  
+👉 [Xem chi tiết](/product/${p.slug})`
+  )
+  .join("\n");
 
-      const productAnswer =
-        products.length === 1
-          ? `Tôi tìm thấy sản phẩm này: ${productList}. Bạn cần mình hỗ trợ thêm không?`
-          : `Tôi đã tìm thấy ${products.length} sản phẩm phù hợp:\n${productList}\nBạn quan tâm đến sản phẩm nào ạ?`;
+const productAnswer =
+  products.length === 1
+    ? `Mình tìm thấy **1 sản phẩm** phù hợp:\n\n${productList}\n\nBạn cần mình hỗ trợ thêm gì không ạ?`
+    : `Mình tìm thấy **${products.length} sản phẩm** phù hợp:\n\n${productList}\n\n👉 Bạn đang quan tâm sản phẩm nào?`;
 
       return NextResponse.json({ answer: productAnswer });
     }

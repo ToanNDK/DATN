@@ -12,7 +12,7 @@ import Link from "next/link";
 
 const Footer = () => {
   return (
-    <footer className="relative bg-gradient-to-t from-gray-50 to-white border-t">
+    <footer className="relative bg-linear-to-t from-gray-50 to-white border-t">
       <Container>
         <FooterTop />
 

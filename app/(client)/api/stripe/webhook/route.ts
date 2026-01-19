@@ -2,10 +2,37 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import nodemailer from "nodemailer";
 
+export const runtime = "nodejs";
+
+/* ===========================
+   STRIPE
+=========================== */
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
-export const runtime = "nodejs"; 
+/* ===========================
+   EMAIL TRANSPORTER
+=========================== */
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
+/* ===========================
+   TYPES
+=========================== */
+type EmailProduct = {
+  name: string;
+  quantity: number;
+  price: number;
+  currency: string;
+};
+
+/* ===========================
+   WEBHOOK HANDLER
+=========================== */
 export async function POST(req: NextRequest) {
   const sig = req.headers.get("stripe-signature");
 
@@ -14,7 +41,6 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.text();
-
   let event: Stripe.Event;
 
   try {
@@ -25,28 +51,43 @@ export async function POST(req: NextRequest) {
     );
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
-    console.error("❌ Webhook signature verification failed.", message);
+    console.error("❌ Webhook verification failed:", message);
     return new NextResponse(`Webhook Error: ${message}`, { status: 400 });
   }
 
-  // ✅ CHỈ XỬ LÝ KHI THANH TOÁN THÀNH CÔNG
+  /* ✅ CHỈ XỬ LÝ KHI THANH TOÁN THÀNH CÔNG */
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
 
-    const {
-      customer_details,
-      amount_total,
-      currency,
-      metadata,
-    } = session;
+    /* 🔥 LẤY DANH SÁCH SẢN PHẨM */
+    const lineItems = await stripe.checkout.sessions.listLineItems(
+      session.id,
+      { limit: 100 }
+    );
 
-    await sendAdminEmail({
-      orderNumber: metadata?.orderNumber,
-      customerName: customer_details?.name,
-      customerEmail: customer_details?.email,
-      amount: amount_total ? amount_total / 100 : 0,
-      currency,
-    });
+    const products: EmailProduct[] = lineItems.data.map((item) => ({
+      name: item.description ?? "Sản phẩm",
+      quantity: item.quantity ?? 1,
+      price: item.amount_total ? item.amount_total / 100 : 0,
+      currency: session.currency?.toUpperCase() ?? "VND",
+    }));
+
+    const emailData = {
+      orderNumber: session.metadata?.orderNumber,
+      customerName: session.customer_details?.name ?? "Quý khách",
+      customerEmail: session.customer_details?.email ?? "",
+      amount: session.amount_total ? session.amount_total / 100 : 0,
+      currency: session.currency?.toUpperCase() ?? "VND",
+      products,
+    };
+
+    // 📩 Gửi mail Admin
+    await sendAdminEmail(emailData);
+
+    // 📩 Gửi mail Khách hàng
+    if (emailData.customerEmail) {
+      await sendCustomerEmail(emailData);
+    }
   }
 
   return NextResponse.json({ received: true });
@@ -57,81 +98,139 @@ export async function POST(req: NextRequest) {
 =========================== */
 async function sendAdminEmail(data: {
   orderNumber?: string;
-  customerName?: string | null;
-  customerEmail?: string | null;
+  customerName: string;
+  customerEmail: string;
   amount: number;
-  currency?: string | null;
+  currency: string;
+  products: EmailProduct[];
 }) {
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
+  const productRows = data.products
+    .map(
+      (p) => `
+<tr>
+  <td>${p.name}</td>
+  <td align="center">${p.quantity}</td>
+  <td align="right">${p.price} ${p.currency}</td>
+</tr>
+`
+    )
+    .join("");
 
   await transporter.sendMail({
     from: `"NDKStore" <${process.env.EMAIL_USER}>`,
     to: process.env.EMAIL_USER,
     subject: `🧾 Đơn hàng mới #${data.orderNumber}`,
     html: `
-<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f6f8;padding:30px 0;font-family:Arial,sans-serif;">
+<table width="100%" style="background:#f4f6f8;padding:30px;font-family:Arial;">
   <tr>
     <td align="center">
-      <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
-        
-        <!-- HEADER -->
+      <table width="600" style="background:#fff;border-radius:8px;">
         <tr>
-          <td style="background:#0f172a;color:#ffffff;padding:20px;text-align:center;">
-            <h1 style="margin:0;font-size:22px;">🛒 NDKStore</h1>
-            <p style="margin:5px 0 0;font-size:14px;">Thông báo đơn hàng mới</p>
+          <td style="background:#0f172a;color:#fff;padding:20px;text-align:center;">
+            <h2>🛒 NDKStore</h2>
+            <p>Đơn hàng mới</p>
           </td>
         </tr>
-
-        <!-- BODY -->
         <tr>
-          <td style="padding:24px;color:#333;">
-            <h2 style="margin-top:0;color:#0f172a;">Đơn hàng đã thanh toán thành công 🎉</h2>
-
-            <table width="100%" cellpadding="8" cellspacing="0" style="border-collapse:collapse;font-size:14px;">
-              <tr>
-                <td style="border-bottom:1px solid #e5e7eb;"><strong>Mã đơn hàng</strong></td>
-                <td style="border-bottom:1px solid #e5e7eb;">${data.orderNumber}</td>
+          <td style="padding:24px;">
+            <p><strong>Mã đơn hàng:</strong> ${data.orderNumber}</p>
+            <p><strong>Khách hàng:</strong> ${data.customerName}</p>
+            <p><strong>Email:</strong> ${data.customerEmail}</p>
+            
+            <table width="100%" cellpadding="8" style="border-collapse:collapse;">
+              <tr style="background:#f1f5f9;">
+                <th align="left">Sản phẩm</th>
+                <th align="center">SL</th>
+                <th align="right">Giá</th>
               </tr>
+              ${productRows}
               <tr>
-                <td style="border-bottom:1px solid #e5e7eb;"><strong>Khách hàng</strong></td>
-                <td style="border-bottom:1px solid #e5e7eb;">${data.customerName}</td>
-              </tr>
-              <tr>
-                <td style="border-bottom:1px solid #e5e7eb;"><strong>Email</strong></td>
-                <td style="border-bottom:1px solid #e5e7eb;">${data.customerEmail}</td>
-              </tr>
-              <tr>
-                <td><strong>Tổng tiền</strong></td>
-                <td style="color:#16a34a;font-weight:bold;">
-                  ${data.amount} ${data.currency?.toUpperCase()}
+                <td colspan="2" align="right"><strong>Tổng cộng</strong></td>
+                <td align="right" style="font-weight:bold;color:#16a34a;">
+                  ${data.amount} ${data.currency}
                 </td>
               </tr>
             </table>
-
-            <p style="margin-top:20px;font-size:14px;">
-              Vui lòng đăng nhập hệ thống Admin để xử lý đơn hàng.
-            </p>
           </td>
         </tr>
-
-        <!-- FOOTER -->
-        <tr>
-          <td style="background:#f8fafc;padding:16px;text-align:center;font-size:12px;color:#64748b;">
-            © ${new Date().getFullYear()} NDKStore. All rights reserved.
-          </td>
-        </tr>
-
       </table>
     </td>
   </tr>
 </table>
+`,
+  });
+}
+
+/* ===========================
+   SEND EMAIL TO CUSTOMER
+=========================== */
+async function sendCustomerEmail(data: {
+  orderNumber?: string;
+  customerName: string;
+  customerEmail: string;
+  amount: number;
+  currency: string;
+  products: EmailProduct[];
+}) {
+  const productRows = data.products
+    .map(
+      (p) => `
+<tr>
+  <td style="border-bottom:1px solid #e5e7eb;">${p.name}</td>
+  <td align="center" style="border-bottom:1px solid #e5e7eb;">${p.quantity}</td>
+  <td align="right" style="border-bottom:1px solid #e5e7eb;">
+    ${p.price} ${p.currency}
+  </td>
+</tr>
 `
-,
+    )
+    .join("");
+
+  await transporter.sendMail({
+    from: `"NDKStore" <${process.env.EMAIL_USER}>`,
+    to: data.customerEmail,
+    subject: `✅ Xác nhận đơn hàng #${data.orderNumber}`,
+    html: `
+<table width="100%" style="background:#f4f6f8;padding:30px;font-family:Arial;">
+  <tr>
+    <td align="center">
+      <table width="600" style="background:#fff;border-radius:8px;">
+        <tr>
+          <td style="background:#16a34a;color:#fff;padding:20px;text-align:center;">
+            <h2>🎉 Thanh toán thành công</h2>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:24px;">
+            <p>Xin chào <strong>${data.customerName}</strong>,</p>
+            <p>Dưới đây là chi tiết đơn hàng của bạn:</p>
+
+            <table width="100%" cellpadding="8" style="border-collapse:collapse;">
+              <tr style="background:#f1f5f9;">
+                <th align="left">Sản phẩm</th>
+                <th align="center">SL</th>
+                <th align="right">Thành tiền</th>
+              </tr>
+
+              ${productRows}
+
+              <tr>
+                <td colspan="2" align="right" style="padding-top:12px;">
+                  <strong>Tổng cộng</strong>
+                </td>
+                <td align="right" style="padding-top:12px;font-weight:bold;color:#16a34a;">
+                  ${data.amount} ${data.currency}
+                </td>
+              </tr>
+            </table>
+
+            <p style="margin-top:20px;">Cảm ơn bạn đã mua hàng tại <strong>NDKStore</strong>.</p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+`,
   });
 }

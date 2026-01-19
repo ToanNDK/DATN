@@ -1,22 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MessageCircle, X, Send } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import ReactMarkdown from "react-markdown";
+import Link from "next/link";
+
+type Message = {
+  role: "user" | "bot";
+  text: string;
+};
 
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<{ role: "user" | "bot"; text: string }[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const toggleChat = () => setIsOpen(!isOpen);
 
+  // Auto scroll xuống cuối
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, loading]);
+
   const handleSend = async () => {
-    if (!input.trim()) return;
+    if (!input.trim() || loading) return;
 
     const userMessage = input.trim();
     setMessages((prev) => [...prev, { role: "user", text: userMessage }]);
     setInput("");
+    setLoading(true);
 
     try {
       const res = await fetch("/api/chat", {
@@ -24,14 +40,18 @@ export default function Chatbot() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: userMessage }),
       });
+
       const data = await res.json();
       const reply = data.answer || "Xin lỗi, mình chưa hiểu câu hỏi của bạn.";
+
       setMessages((prev) => [...prev, { role: "bot", text: reply }]);
     } catch {
       setMessages((prev) => [
         ...prev,
-        { role: "bot", text: "Lỗi kết nối, vui lòng thử lại sau." },
+        { role: "bot", text: "❌ Lỗi kết nối, vui lòng thử lại sau." },
       ]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -41,86 +61,115 @@ export default function Chatbot() {
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
-      {/* Nút bật/tắt chat */}
+      {/* Floating button */}
       <motion.button
         onClick={toggleChat}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
-        className="bg-[#3b9c3c] hover:bg-[#2e7d32] text-white rounded-full p-4 shadow-lg shadow-green-400/30 focus:outline-none transition-all"
-        aria-label="Mở chat"
+        className="bg-green-600 hover:bg-green-700 text-white rounded-full p-4 shadow-lg"
       >
         {isOpen ? <X size={22} /> : <MessageCircle size={24} />}
       </motion.button>
 
-      {/* Hộp chat */}
+      {/* Chat box */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 40 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 40 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            className="fixed bottom-20 right-6 w-80 h-[480px] rounded-2xl shadow-2xl border border-gray-200 overflow-hidden backdrop-blur-md bg-white/90 flex flex-col"
+            initial={{ opacity: 0, y: 40, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 40, scale: 0.9 }}
+            transition={{ duration: 0.25 }}
+            className="fixed bottom-20 right-6 w-96 h-130 bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden"
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-center py-3 font-semibold text-sm flex justify-between items-center px-4">
-              <span>Hỗ trợ khách hàng 💬</span>
-              <button
-                onClick={toggleChat}
-                className="text-white hover:text-gray-200 transition"
-              >
+            <div className="bg-linear-to-r from-blue-600 to-indigo-600 text-white px-4 py-3 flex items-center justify-between">
+              <span className="font-semibold">🤖 Tư vấn sản phẩm</span>
+              <button onClick={toggleChat}>
                 <X size={18} />
               </button>
             </div>
 
-            {/* Danh sách tin nhắn */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-3 text-sm scrollbar-thin scrollbar-thumb-gray-300">
+            {/* Messages */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 text-sm">
               {messages.length === 0 && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-gray-500 text-center mt-10"
-                >
-                  👋 Xin chào! <br /> Tôi có thể giúp gì cho bạn hôm nay?
-                </motion.div>
+                <div className="text-gray-500 text-center mt-10">
+                  👋 Xin chào! <br /> Bạn muốn tìm điện thoại nào hôm nay?
+                </div>
               )}
 
               {messages.map((msg, i) => (
-                <motion.div
+                <div
                   key={i}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
                   className={`flex ${
                     msg.role === "user" ? "justify-end" : "justify-start"
                   }`}
                 >
+                  {msg.role === "bot" && (
+                    <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center mr-2 text-xs">
+                      BOT
+                    </div>
+                  )}
+
                   <div
-                    className={`px-3 py-2 rounded-2xl max-w-[80%] break-words shadow-sm ${
+                    className={`px-4 py-2 rounded-2xl max-w-[75%] shadow ${
                       msg.role === "user"
-                        ? "bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-br-none"
+                        ? "bg-linear-to-r from-blue-500 to-indigo-500 text-white rounded-br-none"
                         : "bg-gray-100 text-gray-800 rounded-bl-none"
                     }`}
                   >
-                    {msg.text}
+                    <ReactMarkdown
+  components={{
+    a: ({ href, children }) => {
+      if (!href) return null;
+
+      return (
+        <Link
+          href={href}
+          className="text-blue-600 font-medium underline hover:text-blue-800"
+          onClick={() => {
+            // Optional: đóng chatbot khi chuyển trang
+            setIsOpen(false);
+          }}
+        >
+          {children}
+        </Link>
+      );
+    },
+  }}
+>
+  {msg.text}
+</ReactMarkdown>
                   </div>
-                </motion.div>
+                </div>
               ))}
+
+              {loading && (
+                <div className="flex items-center space-x-2 text-gray-500">
+                  <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs">
+                    BOT
+                  </div>
+                  <div className="bg-gray-100 px-4 py-2 rounded-2xl">
+                    <span className="animate-pulse">Đang trả lời...</span>
+                  </div>
+                </div>
+              )}
+
+              <div ref={messagesEndRef} />
             </div>
 
             {/* Input */}
-            <div className="border-t border-gray-200 bg-white p-2 flex items-center">
+            <div className="border-t p-3 flex items-center gap-2">
               <input
-                type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Nhập tin nhắn..."
-                className="flex-1 border border-gray-300 rounded-full px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                placeholder="Nhập câu hỏi..."
+                className="flex-1 border rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
               <button
                 onClick={handleSend}
-                className="ml-2 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-indigo-600 hover:to-blue-600 text-white p-2 rounded-full shadow-md transition"
+                disabled={loading}
+                className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full disabled:opacity-50"
               >
                 <Send size={16} />
               </button>

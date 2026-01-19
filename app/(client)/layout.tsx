@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import {ClerkProvider} from "@clerk/nextjs";
 import Chatbot from "@/components/Chatbot";
+import ZaloButton from "@/components/ZaloButton";
 
 export const metadata: Metadata = {
   title:
@@ -25,9 +26,9 @@ export default function RootLayout({
           <Header />
         <main className="flex-1">{children}</main>
         <Footer />
-            <div className="fixed bottom-4 right-4 z-50">
+           
               <Chatbot />
-            </div>
+              <ZaloButton />
             
         </div>
     </ClerkProvider>

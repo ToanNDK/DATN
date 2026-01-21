@@ -8,23 +8,23 @@ import { urlFor } from '@/sanity/lib/image';
 
 const extraData = [
   {
-    title: "Free Delivery",
-    description: "Free shipping over $100",
+    title: "Miễn phí ship",
+    description: "Miễn phí vận chuyển cho đơn hàng trên 100$",
     icon: <Truck size={45} />,
   },
   {
-    title: "Free Return",
-    description: "Free shipping over $100",
+    title: "Trả hàng miễn phí",
+    description: "Hỗ trợ trả hàng trong 30 ngày",
     icon: <GitCompareArrows size={45} />,
   },
   {
-    title: "Customer Support",
-    description: "Friendly 27/7 customer support",
+    title: "Đội ngũ hỗ trợ 24/7",
+    description: "Luôn đồng hành cùng bạn",
     icon: <Headset size={45} />,
   },
   {
-    title: "Money Back guarantee",
-    description: "Quality checked by our team",
+    title: "Đảm bảo chất lượng",
+    description: "Uy tín - Chất lượng - An toàn",
     icon: <ShieldCheck size={45} />,
   },
 ];
@@ -35,7 +35,7 @@ const ShopByBrands = async () => {
   return (
     <div className="mb-10 lg:mb-20 bg-shop_light_bg p-5 lg:p-7 rounded-md overflow-hidden">
       <div className="flex items-center gap-5 justify-between mb-10">
-        <Title>Shop By Brands</Title>
+        <Title>Brands</Title>
         <Link
           href={"/shop"}
           className="text-sm font-semibold tracking-wide hover:text-shop_btn_dark_green hoverEffect"

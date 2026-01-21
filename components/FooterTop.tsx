@@ -9,21 +9,21 @@ interface ContactItemData {
 
 const data: ContactItemData[] = [
   {
-    title: "Address",
+    title: "Địa chỉ",
     subtitle: "Hoàn Kiếm, Hà Nội",
     icon: (
       <MapPin className="h-6 w-6 text-gray-600 group-hover:text-primary transition-colors" />
     ),
   },
   {
-    title: "Hotline",
+    title: "Liên hệ",
     subtitle: "0123 456 789",
     icon: (
       <Phone className="h-6 w-6 text-gray-600 group-hover:text-primary transition-colors" />
     ),
   },
   {
-    title: "Working Hours",
+    title: "Thời gian mở cửa",
     subtitle: "Thứ 2 - Thứ 7: 8:00 - 17:30",
     icon: (
       <Clock className="h-6 w-6 text-gray-600 group-hover:text-primary transition-colors" />

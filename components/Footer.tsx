@@ -41,7 +41,7 @@ const Footer = () => {
           {/* Cột 2: Liên kết nhanh */}
           <div>
             <SubTitle className="text-lg font-semibold mb-4 text-darkColor">
-              Quick Links
+              Liên hệ
             </SubTitle>
             <ul className="space-y-3">
               {quickLinksData.map((item) => (
@@ -60,7 +60,7 @@ const Footer = () => {
           {/* Cột 3: Danh mục sản phẩm */}
           <div>
             <SubTitle className="text-lg font-semibold mb-4 text-darkColor">
-              Category
+              Danh mục 
             </SubTitle>
             <ul className="space-y-3">
               {categoriesData.map((item) => (

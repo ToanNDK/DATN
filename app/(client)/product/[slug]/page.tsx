@@ -66,19 +66,19 @@ const SingleProductPage = async ({
         <div className="flex flex-wrap items-center justify-between gap-2.5 border-b border-b-gray-200 py-5 -mt-2">
           <div className="flex items-center gap-2 text-sm text-black hover:text-red-600 hoverEffect">
             <RxBorderSplit className="text-lg" />
-            <p>Compare color</p>
+            <p>So sánh</p>
           </div>
           <div className="flex items-center gap-2 text-sm text-black hover:text-red-600 hoverEffect">
             <FaRegQuestionCircle className="text-lg" />
-            <p>Ask a question</p>
+            <p>Q&A</p>
           </div>
           <div className="flex items-center gap-2 text-sm text-black hover:text-red-600 hoverEffect">
             <TbTruckDelivery className="text-lg" />
-            <p>Delivery & Return</p>
+            <p>Vận chuyển</p>
           </div>
           <div className="flex items-center gap-2 text-sm text-black hover:text-red-600 hoverEffect">
             <FiShare2 className="text-lg" />
-            <p>Share</p>
+            <p>Chia sẻ</p>
           </div>
         </div>
         <div className="flex flex-col">
@@ -86,10 +86,10 @@ const SingleProductPage = async ({
             <Truck size={30} className="text-shop_orange" />
             <div>
               <p className="text-base font-semibold text-black">
-                Free Delivery
+                Giao hàng tận nơi
               </p>
               <p className="text-sm text-gray-500 underline underline-offset-2">
-                Enter your Postal code for Delivey Availability.
+                Đảm bảo đơn hàng được giao đúng hẹn
               </p>
             </div>
           </div>
@@ -97,11 +97,11 @@ const SingleProductPage = async ({
             <CornerDownLeft size={30} className="text-shop_orange" />
             <div>
               <p className="text-base font-semibold text-black">
-                Return Delivery
+                Đổi trả hàng miễn phí 
               </p>
               <p className="text-sm text-gray-500 ">
-                Free 30days Delivery Returns.{" "}
-                <span className="underline underline-offset-2">Details</span>
+                3 ngày 1 đổi 1 .{" "}
+                <span className="underline underline-offset-2">Chi tiết</span>
               </p>
             </div>
           </div>

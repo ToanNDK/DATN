@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import {ClerkProvider} from "@clerk/nextjs";
 import Chatbot from "@/components/Chatbot";
-import ZaloButton from "@/components/ZaloButton";
+//import ZaloButton from "@/components/ZaloButton";
 
 export const metadata: Metadata = {
   title:
@@ -28,7 +28,7 @@ export default function RootLayout({
         <Footer />
            
               <Chatbot />
-              <ZaloButton />
+              {/* <ZaloButton /> */}
             
         </div>
     </ClerkProvider>
